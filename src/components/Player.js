@@ -5,8 +5,8 @@ const Player = (props) => {
   return (
     <div>
       <p>{props.gameOver}</p>
-      <p>Winner is Player {props.winner ? props.value : ""}</p>
-      <p>Player {props.value}'s Turn</p>
+      {props.winner ? <p>Winner is Player {props.winner ? props.value : ""}</p> : "" }
+      {props.gameOver? "" : <p>Player {props.value}'s Turn</p>}
     </div>
   );
 };

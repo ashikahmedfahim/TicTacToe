@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Square from "./Square";
 import Player from "./Player";
 import "./css/board.css";
 
-let winner;
-
 const Board = () => {
   const [values, setValues] = useState(["", "", "", "", "", "", "", "", ""]);
-
+  
   const [running, setRunning] = useState("-");
-
+  
   const [gameOver, setGameOver] = useState("");
+  
+  const [winner, setWinner] = useState(false);
+  
+  const [counter, setCounter] = useState(0);
 
   const checkWinner = () => {
     for (let i = 0; i < 9; i++) {
@@ -20,7 +22,7 @@ const Board = () => {
           values[i + 1] === running &&
           values[i + 2] === running
         ) {
-          winner = true;
+          setWinner(true);
           setGameOver("Gamer Over");
           setValues(["", "", "", "", "", "", "", "", ""]);
           return true;
@@ -32,7 +34,7 @@ const Board = () => {
         values[i + 6] === running &&
         i < 3
       ) {
-        winner = true;
+        setWinner(true);
         setGameOver("Gamer Over");
         setValues(["", "", "", "", "", "", "", "", ""]);
         return true;
@@ -42,7 +44,7 @@ const Board = () => {
         values[4] === running &&
         values[8] === running
       ) {
-        winner = true;
+        setWinner(true);
         setGameOver("Gamer Over");
         setValues(["", "", "", "", "", "", "", "", ""]);
         return true;
@@ -52,23 +54,23 @@ const Board = () => {
         values[4] === running &&
         values[6] === running
       ) {
-        winner = true;
+        setWinner(true);
         setGameOver("Gamer Over");
         setValues(["", "", "", "", "", "", "", "", ""]);
         return true;
       }
     }
-    winner = false;
+    setWinner(false);
     return false;
   };
 
-  let [counter, setCounter] = useState(0);
 
   const updateCounter = () => {
     setCounter(counter + 1);
     if (counter === 8) {
       setGameOver("Gamer Over");
       setValues(["", "", "", "", "", "", "", "", ""]);
+      setCounter(0);
     }
   };
 
@@ -77,8 +79,12 @@ const Board = () => {
     counter % 2 === 0 ? (newArray[i] = "X") : (newArray[i] = "0");
     setValues(newArray);
     setRunning(newArray[i]);
-    checkWinner();
+   
   };
+
+  useEffect(()=>{
+    checkWinner();
+  },[counter]);
 
   let x = 0;
   return (
@@ -86,7 +92,7 @@ const Board = () => {
       <div>
         <Player
           key={counter % 2}
-          value={counter % 2}
+          value={winner? (counter % 2) -1 : counter % 2}
           winner={winner}
           gameOver={gameOver}
         />
